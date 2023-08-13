@@ -1,0 +1,535 @@
+package com.smarteval.database;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.LinkedHashSet;
+
+import com.smarteval.entities.AnswerBank;
+import com.smarteval.entities.Category;
+import com.smarteval.entities.Examination;
+import com.smarteval.entities.OngoingPapers;
+import com.smarteval.entities.QIDAnswerMapping;
+import com.smarteval.entities.QuestionOA;
+import com.smarteval.entities.StudentsResult;
+import com.smarteval.entities.Users;
+
+import java.sql.Date;
+
+/*
+ * Program : DataStore class
+ * Program By : Rahul Raha
+ * Date : 17-07-2023
+ */
+public class DataStore {
+	/*
+	 	Truncate table answerbank;
+		Truncate table studentsresult;
+		DROP SEQUENCE result_id_seq;
+		CREATE SEQUENCE   "RESULT_ID_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999999 INCREMENT BY 1 START WITH 1 NOCACHE  NOORDER  NOCYCLE;
+	 */
+	static Connection con = DatabaseConnection.getConnection();
+	System.out.print(con);
+	//for making users distinct we are using linkedhashsets
+	//to make its objects unique we have to modify hashcode and equals method of user
+	public static LinkedHashSet<Users> allUsers = new LinkedHashSet<>();
+	public static LinkedHashSet<Category> allCategories = new LinkedHashSet<>();
+	public static LinkedHashSet<Examination> allExaminations = new LinkedHashSet<>();
+	public static LinkedHashSet<OngoingPapers> allOngoingPapers = new LinkedHashSet<>();
+	public static LinkedHashSet<QuestionOA> allQuestionsWithCategory = new LinkedHashSet<>();
+	public static LinkedHashSet<StudentsResult> allStudentsResults = new LinkedHashSet<>();
+	public static LinkedHashSet<QIDAnswerMapping> allQIDAnswermapping = new LinkedHashSet<>();
+	public static LinkedHashSet<AnswerBank> allAnswerBank = new LinkedHashSet<>();
+
+	public static ResultSet retriveAll(String tableName) {
+		ResultSet rs = null;
+		try {
+			String query = "Select * FROM " + tableName;
+			Statement st = con.createStatement();
+			rs = st.executeQuery(query);
+			switch(tableName){
+			case "users": retriveAllUsers(rs);
+			break;
+			case "roles": retriveAllRoles(rs);
+			break;
+			case "categories": retriveAllCategories(rs);
+			break;
+//			case "questionbank": retriveAllQuestionBank(rs);
+//			break;
+			case "examinations": retriveAllExaminations(rs);
+			break;
+//			case "papers": retriveAllPapers(rs);
+//			break;
+//			case "selectedquestions": retriveAllSelectedQuestions(rs);
+//			break;
+			case "answerbank": retriveAllAnswerBank(rs);
+			break;
+//			case "studentsresult": retriveAllStudentsResult(rs);
+//			break;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return rs;
+	}
+
+	public static void retriveAllUsers(ResultSet rs) {
+		try {
+			while(rs.next()) {
+				Users user = new Users(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getInt(5),rs.getString(6),rs.getInt(8),rs.getInt(9));
+				allUsers.add(user);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public static Users retriveUserByUserName(String username) {
+		String query = "SELECT * FROM users" + " WHERE username=?";
+		Users user = new Users();
+		PreparedStatement ps;
+		try {
+			ps = con.prepareStatement(query);
+			ps.setString(1, username);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				user.setUserID(rs.getInt(1));
+				user.setFirstName(rs.getString(2));
+				user.setLastName(rs.getString(3));
+				user.setEmail(rs.getString(4));
+				user.setPhoneNumber(rs.getInt(5));
+				user.setUsername(rs.getString(6));
+				user.setRoleID(rs.getInt(8));
+				user.setExamID(rs.getInt(9));
+			}
+			return user;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return new Users();
+	}
+	
+	public static Integer updateUserByUsernamePassword(String username, String oldpassword, String newpassword) {
+		String query = "UPDATE users" 
+						+ " SET password=?" 
+						+ " WHERE username=? AND password=?";
+		PreparedStatement ps;
+		try {
+			ps = con.prepareStatement(query);
+			ps.setString(1, newpassword);
+			ps.setString(2, username);
+			ps.setString(3, oldpassword);
+			Integer res = ps.executeUpdate();
+			return res;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 1;
+	}
+
+	private static void retriveAllRoles(ResultSet rs) {
+		try {
+			while(rs.next()) {
+				System.out.println(rs.getInt(1) + " " 
+						+ rs.getString(2) + " "
+						+ rs.getString(3) + " ");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private static void retriveAllCategories(ResultSet rs) {
+		try {
+			while(rs.next()) {
+				allCategories.add(new Category(rs.getInt(1), rs.getString(2)));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private static void retriveAllExaminations(ResultSet rs) {
+		try {
+			while(rs.next()) {
+				Examination exam = new Examination(rs.getInt(1),rs.getDate(2),rs.getString(3),rs.getString(4));
+				allExaminations.add(exam);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public static void retriveAllAnswerBank(ResultSet rs) {
+		
+		try {
+			while(rs.next()) {
+				AnswerBank ab = new AnswerBank(rs.getInt(1),rs.getInt(2),rs.getInt(3),rs.getInt(4),rs.getString(5));
+				allAnswerBank.add(ab);
+			}
+		} 
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public static void retriveOngoingPapers() {
+		String query = "SELECT paper_id, p.exam_id, e.exam_name, subject, valid_till "
+				+ "FROM examinations e, papers p "
+				+ "WHERE e.exam_id=p.exam_id ";
+		PreparedStatement ps;
+		ResultSet rs = null;
+		try {
+			ps = con.prepareStatement(query);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				OngoingPapers op = new OngoingPapers(rs.getInt(1),rs.getInt(2),rs.getString(3),rs.getString(4),rs.getDate(5));
+				allOngoingPapers.add(op);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void retriveQuestionsWithCategories() {
+		String query = "SELECT question_id,question,option1,option2,option3,option4,answer,questionbank.category_id,category_name FROM questionbank,categories"
+				+ " WHERE questionbank.category_id=categories.category_id";
+		PreparedStatement ps;
+		ResultSet rs = null;
+		try {
+			ps = con.prepareStatement(query);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				QuestionOA qoa = new QuestionOA(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getInt(8),rs.getString(9));
+				allQuestionsWithCategory.add(qoa);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static ResultSet retriveQuestionsByPaperIDANDExamID(Integer examID, Integer paperID) {
+		String query = "SELECT papers.paper_id, papers.exam_id,questionbank.question_id, no_of_questions,question,option1,option2,option3,option4 "
+				+ "FROM papers,examinations,selectedquestions,questionbank "
+				+ "WHERE selectedquestions.question_id = questionbank.question_id AND "
+				+ "selectedquestions.paper_id = papers.paper_id AND papers.exam_id = examinations.exam_id AND "
+				+ "examinations.exam_id=? AND papers.paper_id=?";
+		PreparedStatement ps;
+		ResultSet rs = null;
+		try {
+			ps = con.prepareStatement(query);
+			ps.setInt(1, examID);
+			ps.setInt(2, paperID);
+			rs = ps.executeQuery();
+			return rs;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rs;
+	}
+	
+	public static void retriveStudentsResults() {
+		String query = "SELECT u.username,p.subject,sr.marks FROM studentsresult sr ,users u ,papers p"
+				+ " WHERE sr.user_id = u.user_id AND sr.paper_id = p.paper_id";
+		
+		PreparedStatement ps;
+		ResultSet rs = null;
+		try {
+			ps = con.prepareStatement(query);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				StudentsResult sr = new StudentsResult(rs.getString(1), rs.getString(2), rs.getInt(3));
+				allStudentsResults.add(sr);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public static Integer insertUser(String firstName, String lastName,
+			String email, Long phoneNumber, String username,
+			String password,Integer roleId,Integer examId) {
+		try {
+			DataStore.retriveAll("users");
+			for(Users u: allUsers) {
+				if(u.getUsername().equals(username)) {
+					return -2;
+				}
+			}
+			String query = "INSERT INTO users VALUES (user_id_seq.nextval,?,?,?,?,?,?,?,?)";
+			//String query = "INSERT INTO users(first_name,last_name,email,phone_number,username,password,role_id,exam_id) VALUES (?,?,?,?,?,?,?,?)";
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setString(1, firstName);
+			ps.setString(2, lastName);
+			ps.setString(3, email);
+			ps.setDouble(4, phoneNumber);
+			ps.setString(5, username);
+			ps.setString(6, password);
+			ps.setInt(7, roleId);
+			ps.setInt(8, examId);
+			Integer rs = ps.executeUpdate();
+			return rs;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return -1;
+		}
+	}
+
+	public static Integer insertCategory(String subject) {
+		try {
+			//String query = "INSERT INTO categories(category_name) VALUES(?)";
+			String query = "INSERT INTO categories VALUES(category_id_seq.nextval,?)";
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setString(1, subject);
+			Integer rs = ps.executeUpdate();
+			return rs;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return -1;
+		}
+	};
+
+	public static Integer insertQuestions(String question, 
+			String option1,	String option2,String option3,
+			String option4,String answer, Integer categoriesId) {
+		try {
+			String query = "INSERT INTO questionbank VALUES (question_id_seq.nextval,?,?,?,?,?,?,?)";
+			//String query = "INSERT INTO questionbank(question,option1,option2,option3,option4,answer,category_id) VALUES (?,?,?,?,?,?,?)";
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setString(1, question);
+			ps.setString(2, option1);
+			ps.setString(3, option2);
+			ps.setString(4, option3);
+			ps.setString(5, option4);
+			ps.setString(6, answer);
+			ps.setInt(7, categoriesId);
+			Integer rs = ps.executeUpdate();
+			return rs;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return -1;
+		}
+	}
+
+	public static Integer insertExaminations(String date, String exam, String description) {
+		try {
+			String query = "INSERT INTO examinations VALUES (exam_id_seq.nextval,?,?,?)";
+			//String query = "INSERT INTO examinations(exam_date,exam_name,exam_desc) VALUES (?,?,?)";
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setDate(1, Date.valueOf(date));
+			ps.setString(2, exam);
+			ps.setString(3, description);
+			Integer rs = ps.executeUpdate();
+			return rs;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return -1;
+		}
+	}
+
+	public static void insertPapers(Integer exam_id, String subject, String validTill, String description, Integer noOfQuestions) {
+		try {
+			String query = "INSERT INTO papers VALUES (paper_id_seq.nextval,?,?,?,?,?)";
+			
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setInt(1, exam_id);
+			ps.setString(2, subject);
+			ps.setDate(3, Date.valueOf(validTill));
+			ps.setString(4, description);
+			ps.setInt(5, noOfQuestions);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static Integer maxOfPaperID() {
+		String getPaperIDQuery = "SELECT * FROM papers WHERE paper_id=(SELECT max(paper_id) FROM papers)";
+		PreparedStatement ps;
+		try {
+			ps = con.prepareStatement(getPaperIDQuery);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				return rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return -1;
+		}
+		return -2;
+	}
+
+	public static void insertSelectedQuestions(Integer questionId,Integer paperId) {
+		try {
+			String query = "INSERT INTO selectedquestions VALUES (?,?)";
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setInt(1, questionId);
+			ps.setInt(2, paperId);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public static void insertAnswer(Integer userId,
+			Integer examId,Integer paperId,
+			Integer questionId, String answer) {
+
+		try {
+			String query = "INSERT INTO answerbank  VALUES (?,?,?,?,?)";
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setInt(1, userId);
+			ps.setInt(2, examId);
+			ps.setInt(3, paperId);
+			ps.setInt(4, questionId);
+			ps.setString(5, answer);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	private static void retriveQIDAnswermapping() {
+		try {
+			String query="SELECT question_id, answer FROM questionbank";
+			Statement smt = con.createStatement();
+			ResultSet rs = smt.executeQuery(query);
+			while(rs.next()) {
+				QIDAnswerMapping q = new QIDAnswerMapping(rs.getInt(1), rs.getString(2));
+				allQIDAnswermapping.add(q);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void insertStudentsResult(Integer userId, Integer paperId, 
+			Integer[] questionID, String[] answers, Integer noOfQuestions) {
+		Integer marks = 0;
+		DataStore.retriveQIDAnswermapping();
+		
+		for(QIDAnswerMapping q : allQIDAnswermapping) {
+			for(int i=0; i<questionID.length; i++) {
+				if(q.getQuestionID() == questionID[i] && q.getAnswer().equals(answers[i])) {
+						marks++;
+						break;
+				}
+			}
+		}
+		try {
+			String query = "INSERT INTO studentsresult  VALUES (result_id_seq.nextval,?,?,?)";
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setInt(1, userId);
+			ps.setInt(2, paperId);
+			ps.setInt(3, marks);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public static Integer checkLogin(String username, String password) {
+		String query = "SELECT username,password,role_id FROM users" + " WHERE username=? AND password=?";
+		PreparedStatement ps;
+		ResultSet rs = null;
+		try {
+			ps = con.prepareStatement(query);
+			ps.setString(1, username);
+			ps.setString(2, password);
+			rs = ps.executeQuery();
+			while(rs == null) {
+				return -999;
+			}
+			while(rs.next())
+				return rs.getInt(3);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return -999;
+	}
+	
+
+//	private static void retriveAllQuestionBank(ResultSet rs) {
+//		try {
+//			while(rs.next()) {
+//				System.out.println(rs.getInt(1) + " " 
+//						+ rs.getString(2) + " "
+//						+ rs.getString(3) + " "
+//						+ rs.getString(4) + " "
+//						+ rs.getString(5) + " "
+//						+ rs.getString(6) + " "
+//						+ rs.getString(7) + " "
+//						+ rs.getInt(8) + " ");
+//			}
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
+
+//	private static void retriveAllStudentsResult(ResultSet rs) {
+//	try {
+//		while(rs.next()) {
+//			System.out.println(rs.getInt(1) + " " 
+//					+ rs.getInt(2) + " "
+//					+ rs.getInt(3) + " "
+//					+ rs.getInt(4) + " ");
+//		}
+//	} catch (SQLException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
+//}
+	
+//	private static void retriveAllPapers(ResultSet rs) {
+//	try {
+//		while(rs.next()) {
+//			System.out.println(rs.getInt(1) + " " 
+//					+ rs.getInt(2) + " "
+//					+ rs.getString(3) + " "
+//					+ rs.getDate(4) + " "
+//					+ rs.getString(5) + " "
+//					+ rs.getInt(6) + " ");
+//		}
+//	} catch (SQLException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
+//}
+
+//private static void retriveAllSelectedQuestions(ResultSet rs) {
+//	try {
+//		while(rs.next()) {
+//			System.out.println(rs.getInt(1) + " " 
+//					+ rs.getInt(2) + " ");
+//		}
+//	} catch (SQLException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
+//}
+}

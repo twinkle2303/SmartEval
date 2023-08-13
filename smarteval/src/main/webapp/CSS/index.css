@@ -1,0 +1,464 @@
+@charset "ISO-8859-1";
+@import url('https://fonts.googleapis.com/css2?family=Ysabeau+SC:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap');
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Josefin Sans', sans-serif;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #e0e0e1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #e46161;
+}
+
+body{
+	overflow: hidden;
+}
+
+.message-for-user-divs{
+	color:red;
+	text-align: center;
+}
+
+.header h1, .header2 h1, .header3 h1 {
+	color: #002244;
+	font-family: 'Ysabeau SC', sans-serif;
+	text-align: center;
+	margin:0;
+	padding-top:5px;
+	padding-bottom: 5px;
+}
+
+.header, .header2, .header3 {
+	border-radius: 0 8px 8px 0;
+	box-shadow: 2px -3px 44px -20px rgba(0, 0, 0, 0.52);
+	-webkit-box-shadow: 2px -3px 44px -20px rgba(0, 0, 0, 0.52);
+	-moz-box-shadow: 2px -3px 44px -20px rgba(0, 0, 0, 0.52);
+	background-color: #f0f0f0;
+	width: 20%;
+	height: 100vh;
+	padding: 20px 0;
+}
+
+.option-list .home, .option-list .about-us, .option-list .login,
+	.option-list .join, .option-list .dashboard, .option-list .changepassword,
+	.option-list .logout, .option-list .add, .option-list .reports,
+	.option-list .exampapers, .option-list .studentresult, .option-list .studentaccount
+	{
+	padding-left: 20px;
+}
+
+.home:hover, .about-us:hover, .login:hover, .join:hover, .dashboard:hover,
+	.changepassword:hover, .logout:hover, .add:hover, .reports:hover,
+	.exampapers:hover, .studentresult:hover, .studentaccount:hover {
+	cursor: pointer;
+	background-color: #e4d1d1;
+}
+
+.logout a {
+	display: flex;
+}
+
+.logout div {
+	padding-left: 10px;
+}
+
+.logout img {
+	height: 20px;
+	width: 20px;
+	margin-right: 10px;
+}
+
+.option-list {
+	position: relative;
+	height: 100vh;
+}
+
+.logout {
+	position: absolute;
+	bottom: 12%;
+	width: 100%;
+}
+
+.option-list div {
+	padding: 10px 0;
+}
+
+.option-list div a {
+	text-decoration: none;
+	color: black;
+}
+
+.container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+}	
+
+.image-container {
+	flex: 1;
+	padding-left: 30px;
+	padding-right: 30px;
+	box-sizing: border-box;
+}
+
+.image-container img {
+	max-width: 100%;
+	height: auto;
+}
+
+.content {
+	flex: 1.2;
+	box-sizing: border-box;
+	padding: 40px;
+}
+
+.content p {
+	margin-top: 25px;
+	padding-right: 100px;
+}
+
+.about-us-content {
+	padding: 100px 120px 100px 120px;
+	box-sizing: border-box;
+	width: 80%;
+	height:100vh;
+	overflow-y: auto;
+}
+
+.about-us-content h1 {
+	margin-bottom: 20px;
+}
+
+.about-us-content ul li {
+	padding: 10px 0;
+}
+
+.about-us-content ul li p {
+	padding: 5px 0;
+}
+
+.loginpage {
+	display: flex;
+	position: relative;
+}
+
+.login-container {
+	position: absolute;
+	top: 50%;
+	left: 55%;
+	transform: translate(-50%,-50%);
+}
+
+.loginpage .form, .change-password-container .form {
+	border: 3px solid #f1f1f1;
+	padding: 20px;
+}
+
+form h1, form p {
+	text-align: center;
+	padding: 5px 0;
+}
+
+form a {
+	text-decoration: none;
+	color: #e46161;
+}
+
+.change-password {
+	display: flex;
+	height: 100vh;
+	position: relative;
+}
+
+.change-password-container {
+	position: absolute;
+	top: 50%;
+	left: 55%;
+	transform: translate(-50%,-50%);
+}
+input[type="number"] {
+  -webkit-appearance: textfield;
+     -moz-appearance: textfield;
+          appearance: textfield;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none;
+}
+
+/* Full-width inputs */
+input[type=text],input[type=email],input[type=number],input[type=password] {
+	width: 100%;
+	padding: 12px 20px;
+	margin: 8px 0;
+	display: inline-block;
+	border: 1px solid #ccc;
+	box-sizing: border-box;
+}
+
+/* Set a style for all buttons */
+button {
+	background-color: #eea29a;
+	color: white;
+	padding: 14px 20px;
+	margin: 8px 0;
+	border: none;
+	cursor: pointer;
+	width: 100%;
+	font-size: 18px;
+	font-weight: 500;
+}
+
+/* Add a hover effect for buttons */
+button:hover {
+	opacity: 0.8;
+}
+
+.joinpage {
+	display: flex;
+	position: relative;
+}
+
+.join-container {
+	position: absolute;
+	top: 50%;
+	left: 55%;
+	transform: translate(-50%,-50%);
+}
+
+.joinpage form {
+	border: none;
+	width: 55%;
+}
+
+.redirect {
+	width: 100%;
+}
+
+.role {
+	display: flex;
+	align-items: center;
+}
+
+.role h3 {
+	margin-right: 10px;
+}
+
+.role label {
+	padding-top: 4px;
+	padding-left: 10px;
+}
+
+.admin-dashboard, .student-dashboard, .student-account, .add-question,
+	.add-exam {
+	display: flex;
+	position: relative;
+}
+
+.admin-page-container, .student-page-container,
+	.student-account-container, .add-question-container,
+	.add-exam-container {
+	position: absolute;
+	top: 10%;
+	left: 40%;
+	width: 30%;
+}
+
+.admin-page-container h2 {
+	margin-top: 20px;
+	font-weight: 50;
+}
+
+.dropbtn {
+	border: none;
+	cursor: pointer;
+}
+
+.add, .report {
+	padding-left: 20px;
+}
+
+.dropdown-content {
+	display: none;
+	position: absolute;
+	background-color: #f1f1f1;
+	min-width: 160px;
+	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+	z-index: 1;
+}
+
+.dropdown-content a {
+	color: black;
+	padding: 12px 18px;
+	text-decoration: none;
+	display: block;
+}
+
+.dropdown-content a:hover {
+	background-color: #e4d1d1;
+}
+
+.dropdown:hover .dropdown-content {
+	display: block;
+}
+
+.grid-container {
+	display: grid;
+	grid-template-columns: auto;
+	gap: 10px;
+}
+
+.grid-container a {
+	background-color: #e46161;
+	padding: 40px;
+	margin-top: 20px;
+}
+
+.grid-container a:hover {
+	background-color: #002244;
+	cursor: pointer;
+}
+
+.grid-item {
+	color: white;
+}
+
+a {
+	text-decoration: none;
+}
+
+.user-report, .student-result, .student-report, .question-report,
+	.ongoing-papers, .exam-portal {
+	display: flex;
+	position: relative;
+}
+
+.user-report-container, .student-result-container,
+	.student-report-container, .question-report-container,
+	.ongoing-papers-container {
+	padding: 80px;
+	width:80%;
+	height: 100vh;
+	overflow: auto;
+}
+
+.exam-portal-container{
+	width:100%;
+	padding: 80px;
+	height: 100vh;
+	overflow: auto;
+}
+.whole {
+	font-family: Arial, Helvetica, sans-serif;
+	border-collapse: collapse;
+	width:100%;
+}
+
+.questionsubmitbtn {
+	width: 100px;
+}
+
+.whole td, th {
+	border: 1px solid #ddd;
+	padding: 8px;
+}
+
+.whole th {
+	padding-top: 12px;
+	padding-bottom: 12px;
+	text-align: left;
+	background-color: #e46161;
+	color: white;
+}
+
+.timer {
+	width: fit-content;
+	color: white;
+	background-color: #eea29a;
+	padding: 10px;
+	margin-bottom: 20px;
+	border-radius: 5px;
+}
+
+.question {
+	border-collapse: collapse;
+	width: 95%;
+}
+
+li{
+	margin:10px;
+	list-style-type: none;
+}
+
+select{
+	padding: 10px;
+}
+.add-paper{
+	position: relative;
+	height: 100vh;
+	width: 100%;
+	overflow: hidden;
+}
+
+.add-paper-container{
+	height: 100vh;
+	width: 80%;
+	padding: 50px;
+	overflow: auto;
+	float: right;
+}
+
+.add-paper .header2{
+	float: left;
+}
+.question-addpaper-container{
+	padding: 10px;
+	width: 100%;
+
+	height: 100vh;
+	overflow: auto;
+	overflow-y: scroll;
+}
+
+.addpaper-whole{
+	font-family: Arial, Helvetica, sans-serif;
+	border-collapse: collapse;
+	width:80%;
+}
+
+.addpaper-whole td, th {
+	border: 1px solid #ddd;
+	padding: 8px;
+}
+
+.addpaper-whole th {
+	padding-top: 12px;
+	padding-bottom: 12px;
+	text-align: left;
+	background-color: #e46161;
+	color: white;
+}
+
+.addpaper-submitbtn{
+	width: 100px;
+}
